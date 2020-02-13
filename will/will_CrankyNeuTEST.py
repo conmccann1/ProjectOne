@@ -77,8 +77,8 @@ def crankydiffusionNEUtest(x_start,x_stop,t_stop,D,xN,tN,a):
     for i in np.arange(0,len(t),1):
         
         plt.plot(x,real_sol(x,t[i],a), '.')
-        plt.plot(x,conc[:,i],'b',linewidth=3)
-        plt.plot(-x,conc[:,i],'b',linewidth=3)
+        plt.plot(x,conc[:,i],'b',linewidth=1)
+        plt.plot(-x,conc[:,i],'b',linewidth=1)
 #        plt.ylim((0,5))
 #        plt.xlim((-1.5,1.5))
         plt.pause(0.01)

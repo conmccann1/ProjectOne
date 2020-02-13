@@ -6,23 +6,23 @@ Created on Tue Feb 11 17:56:05 2020
 """
 import matplotlib.pyplot as plt
 import numpy as np
-#from CrankyDiffusion1D import crankydiffusion1D
-#from CrankyDifNeu import crankydiffusionNEU
-#from CrankyDiffusion1D import crankydiffusionNOPLOT
+from CrankyDiffusion1D import crankydiffusion1D
+from CrankyDifNeu import crankydiffusionNEU
+from CrankyDiffusion1D import crankydiffusionNOPLOT
 from CrankyNeuTEST import crankydiffusionNEUtest
-#from CrankDifNeuTest2 import crankdiffusionNEUtest1
+from CrankDifNeuTest2 import crankdiffusionNEUtest1
 
 
 """ Normal Diffusion Dirichlet BCs """
-D = 0.25
-x_start = 0
-x_stop = 1
-xN = 50
-tN = 50
-t_stop = 1
-dt = (t_stop)/(tN-1)
-
 # =============================================================================
+# D = 0.25
+# x_start = 0
+# x_stop = 1
+# xN = 50
+# tN = 50
+# t_stop = 1
+# dt = (t_stop)/(tN-1)
+# 
 # def bndryA(x):
 #     return 0
 # def bndryB(x):
@@ -49,8 +49,8 @@ dt = (t_stop)/(tN-1)
 #     plt.clf()
 # 
 # plt.close('all')
-# 
 # =============================================================================
+
 
 
 
@@ -67,8 +67,8 @@ dt = (t_stop)/(tN-1)
 
   
 """ CLOSEST TO PAPER BUT SPIKE OVER RANGE OF X AT T = 0 """
-a = (1/((2*np.pi*np.e)**0.5)) 
-conc = crankydiffusionNEUtest(0,5,0.5,1,120,100,1/a)
+a = 1/((2*np.pi*np.e)**0.5)
+conc = crankydiffusionNEUtest(0,5,0.5,1,120,100,a)
 plt.close('all')
 
 
