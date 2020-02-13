@@ -9,8 +9,8 @@ import numpy as np
 from CrankyDiffusion1D import crankydiffusion1D
 from CrankyDifNeu import crankydiffusionNEU
 from CrankyDiffusion1D import crankydiffusionNOPLOT
-from CrankyNeuTEST import crankydiffusionNEUtest
-from CrankDifNeuTest2 import crankdiffusionNEUtest1
+#from CrankyNeuTEST import crankydiffusionNEUtest
+#from CrankDifNeuTest2 import crankdiffusionNEUtest1
 
 
 """ Normal Diffusion Dirichlet BCs """
@@ -20,7 +20,7 @@ x_stop = 1
 xN = 50
 tN = 50
 t_stop = 1
-dt = (t_stop)/(tN-1) 
+dt = (t_stop)/(tN-1)
 
 def bndryA(x):
     return 0
