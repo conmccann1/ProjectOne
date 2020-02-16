@@ -33,7 +33,7 @@ def crankdiffusionNEUtest1(x_start,x_stop,t_stop,D,xN,tN,spike):
     A = np.zeros((xN-2,xN-2))
     
     A[-1,-2] = (r*(2/3)+2) 
-    A[-1,-1] = -r*(2/3) 
+    A[-1,-1] = -r*(2/3)
 
     A[0,0] = 2*(r+1) 
     A[0,1] = -r 

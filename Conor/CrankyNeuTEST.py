@@ -4,16 +4,23 @@ import numpy as np
 x_start = 0
 x_stop = 30
 
-t_stop = 1
+t_stop = 30
 D = 1
-xN = int(23.3333333333*x_stop)
+xN = int(50*x_stop)
 tN = int(200*t_stop)
 #h = 0.04291845
 #dt = 0.00505050505
-a = (1/((2*np.pi*np.e)**0.5)) 
+a = 0.08 #(1/((2*np.pi*np.e)**0.5))
 
 
 """ Set-up """
+# setting up list for sparks
+
+location_list = []
+fired = []
+for i in range(x_stop):
+    fired.append(False)
+
 # Step sizes
 h = (x_stop-x_start)/(xN-1)
 dt = (t_stop)/(tN-1)
@@ -21,7 +28,7 @@ r = (D*dt)/(h**2)
 
 # space and time vecotors, used to fill bndrys and iniconds
 x = np.linspace(x_start,x_stop,xN)
-print(x)
+# print(x)
 t = np.linspace(0,t_stop,tN)
 #t = np.arange(0,t_stop,dt)
 
@@ -65,6 +72,14 @@ for k in np.arange(0,tN-1):
     c = np.linalg.solve(A,b)
  
     for i in np.arange(0,xN-2):
+        if i != 0 and i%50 == 0:
+            location = int(i/50)
+            if fired[location] is False and c[i] >= 1:
+                print('Firing at location = ' + str(location))
+                c[i] += 1/h
+                fired[location-1] = True
+                fired[location] = True
+
         conc[i+1,k+1] = c[i]
     
     conc[0,k+1] = (4/3)*conc[1,k+1]-(1/3)*conc[2,k+1]
@@ -73,15 +88,16 @@ for k in np.arange(0,tN-1):
 def cBar(x,t):
     return np.exp(-(x**2) / (4*t)) / ( ((4*t*np.pi*(a**2)))**0.5 )
 
+
 """ Plot solutions for all time """
 for i in np.arange(0,len(t),1):
     plt.plot(x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5,)
     plt.plot(-x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5,)
     plt.plot(x,conc[:,i],'r',linewidth=2)
     plt.plot(-x,conc[:,i],'r',linewidth=2)
-    plt.ylim((0,5))
-    plt.xlim((-3,3))
-    plt.pause(0.01)
+    plt.ylim((0,7))
+    plt.xlim((-12,12))
+    plt.pause(0.001)
     plt.clf()
 #        plt.plot(np.ones(40),np.arange(0,4,0.1),'--')
 #        plt.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')

@@ -6,11 +6,11 @@ Created on Tue Feb 11 17:56:05 2020
 """
 import matplotlib.pyplot as plt
 import numpy as np
-#from CrankyDiffusion1D import crankydiffusion1D
-#from CrankyDifNeu import crankydiffusionNEU
-#from CrankyDiffusion1D import crankydiffusionNOPLOT
-from CrankyNeuTEST import crankydiffusionNEUtest
-#from CrankDifNeuTest2 import crankdiffusionNEUtest1
+# from CrankyDiffusion1D import crankydiffusion1D
+# from CrankyDifNeu import crankydiffusionNEU
+# from CrankyDiffusion1D import crankydiffusionNOPLOT
+import CrankyNeuTEST as cnt
+# from CrankDifNeuTest2 import crankdiffusionNEUtest1
 
 
 """ Normal Diffusion Dirichlet BCs """
@@ -65,12 +65,11 @@ dt = (t_stop)/(tN-1)
 # =============================================================================
 
 
-while plt.xkcd():
-    
-    """ CLOSEST TO PAPER BUT SPIKE OVER RANGE OF X AT T = 0 """
-    a = (1/((2*np.pi*np.e)**0.5)) 
-    conc = crankydiffusionNEUtest(0,5,0.5,1,120,100,1/a)
-    plt.close('all')
+  
+""" CLOSEST TO PAPER BUT SPIKE OVER RANGE OF X AT T = 0 """
+a = (1/((2*np.pi*np.e)**0.5)) 
+cnt.crankydiffusionNEUtest1(0,5,0.5,1,120,100,1/a)
+plt.close('all')
 
 
 

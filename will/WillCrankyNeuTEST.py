@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 x_start = 0
-x_stop = 30
+x_stop = 12
 
-t_stop = 30
+t_stop = 10
 D = 1
 xN = int(50*x_stop)
 tN = int(200*t_stop)
@@ -12,6 +12,8 @@ tN = int(200*t_stop)
 #dt = 0.00505050505
 a = 0.08 #(1/((2*np.pi*np.e)**0.5))
 
+plot_label_count_numeric = 0
+plot_label_count_analytic = 0
 
 """ Set-up """
 # setting up list for sparks
@@ -89,18 +91,29 @@ def cBar(x,t):
     return np.exp(-(x**2) / (4*t)) / ( ((4*t*np.pi*(a**2)))**0.5 )
 
 
+fig, ax = plt.subplots()
+ax.plot(np.ones(40),np.arange(0,4,0.1),'--')
+ax.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')
+ax.plot(x,np.ones(len(x)),'--')
+ax.plot(-x,np.ones(len(x)),'--')
+
 """ Plot solutions for all time """
 for i in np.arange(0,len(t),1):
-    plt.plot(x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5,)
-    plt.plot(-x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5,)
-    plt.plot(x,conc[:,i],'r',linewidth=2)
-    plt.plot(-x,conc[:,i],'r',linewidth=2)
-    plt.ylim((0,7))
-    plt.xlim((-12,12))
+    ax.plot(x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5, label = 'R' + str(plot_label_count_analytic))
+    ax.plot(-x[::5],cBar(x[::5],t[i]),'xb',mew=5, ms=5, label = 'L' + str(plot_label_count_analytic))
+    ax.plot(x,conc[:,i],'r',linewidth=2, label = 'R' + str(plot_label_count_numeric))
+    ax.plot(-x,conc[:,i],'r',linewidth=2, label = 'L' + str(plot_label_count_numeric))
+    ax.set_ylim((0,7))
+    ax.set_xlim((-12,12))
     plt.pause(0.001)
-    plt.clf()
-#        plt.plot(np.ones(40),np.arange(0,4,0.1),'--')
-#        plt.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')
-#        plt.plot(x,np.ones(len(x)),'--')
-#        plt.plot(-x,np.ones(len(x)),'--')
-plt.close('all')
+    line = [line for line in ax.lines if line.get_label()=='R' + str(plot_label_count_analytic)][0]
+    ax.lines.remove(line)
+    line = [line for line in ax.lines if line.get_label()=='R' + str(plot_label_count_numeric)][0]
+    ax.lines.remove(line)
+    line = [line for line in ax.lines if line.get_label()=='L' + str(plot_label_count_analytic)][0]
+    ax.lines.remove(line)
+    line = [line for line in ax.lines if line.get_label()=='L' + str(plot_label_count_numeric)][0]
+    ax.lines.remove(line)
+    plot_label_count_numeric += 1
+    plot_label_count_analytic += 1
+
