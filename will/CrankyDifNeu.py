@@ -7,7 +7,7 @@ Created on Tue Feb 11 19:40:08 2020
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+from UsefulFunctions import cBar
 
 def crankydiffusionNEU(x_start,x_stop,t_stop,D,xN,tN,spike):
         
@@ -72,9 +72,9 @@ def crankydiffusionNEU(x_start,x_stop,t_stop,D,xN,tN,spike):
        
         plt.plot(x,conc[:,i],'b',linewidth=3)
 #        plt.plot(-x,conc[:,i],'b',linewidth=3)
-        plt.ylim((1,2))
+        plt.ylim((0,2))
         plt.xlim((x_start,x_stop))
-        plt.pause(0.01)
+        plt.pause(0.0001)
         plt.clf()
 #        plt.plot(np.ones(40),np.arange(0,4,0.1),'--')
 #        plt.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')
@@ -82,3 +82,4 @@ def crankydiffusionNEU(x_start,x_stop,t_stop,D,xN,tN,spike):
 #        plt.plot(-x,np.ones(len(x)),'--')
     return conc
 
+crankydiffusionNEU(0,2,3,1.5,20,600,1)
