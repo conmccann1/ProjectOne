@@ -4,13 +4,13 @@ import numpy as np
 x_start = 0
 x_stop = 12
 
-t_stop = 10
+t_stop = 1
 D = 1
 xN = int(50*x_stop)
 tN = int(200*t_stop)
 #h = 0.04291845
 #dt = 0.00505050505
-a = 0.08 #(1/((2*np.pi*np.e)**0.5))
+a = 0.053 #(1/((2*np.pi*np.e)**0.5))
 
 plot_label_count_numeric = 0
 plot_label_count_analytic = 0
@@ -74,13 +74,15 @@ for k in np.arange(0,tN-1):
     c = np.linalg.solve(A,b)
  
     for i in np.arange(0,xN-2):
-        if i != 0 and i%50 == 0:
-            location = int(i/50)
-            if fired[location] is False and c[i] >= 1:
-                print('Firing at location = ' + str(location))
-                c[i] += 1/h
-                fired[location-1] = True
-                fired[location] = True
+# =============================================================================
+#         if i != 0 and i%50 == 0:
+#             location = int(i/50)
+#             if fired[location] is False and c[i] >= 1:
+#                 print('Firing at location = ' + str(location))
+#                 c[i] += 1/h
+#                 fired[location-1] = True
+#                 fired[location] = True
+# =============================================================================
 
         conc[i+1,k+1] = c[i]
     
@@ -105,7 +107,7 @@ for i in np.arange(0,len(t),1):
     ax.plot(-x,conc[:,i],'r',linewidth=2, label = 'L' + str(plot_label_count_numeric))
     ax.set_ylim((0,7))
     ax.set_xlim((-12,12))
-    plt.pause(0.001)
+    plt.pause(0.01)
     line = [line for line in ax.lines if line.get_label()=='R' + str(plot_label_count_analytic)][0]
     ax.lines.remove(line)
     line = [line for line in ax.lines if line.get_label()=='R' + str(plot_label_count_numeric)][0]
