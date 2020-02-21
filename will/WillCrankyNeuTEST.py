@@ -62,7 +62,8 @@ b = np.zeros((xN-2,1))
 
 """ Fill conc with approximations """
 for k in np.arange(0,tN-1):
-
+    total_conc = 0
+    
     b[0] = 2*conc[1,k]+r*(conc[0,k]-2*conc[1,k]+conc[2,k])
 
     for i in np.arange(2,xN-2):
@@ -74,6 +75,7 @@ for k in np.arange(0,tN-1):
     c = np.linalg.solve(A,b)
  
     for i in np.arange(0,xN-2):
+        total_conc += c[i]
 # =============================================================================
 #         if i != 0 and i%50 == 0:
 #             location = int(i/50)
@@ -85,7 +87,7 @@ for k in np.arange(0,tN-1):
 # =============================================================================
 
         conc[i+1,k+1] = c[i]
-    
+    print('Total concentration = ' + str(total_conc))
     conc[0,k+1] = (4/3)*conc[1,k+1]-(1/3)*conc[2,k+1]
 
 
