@@ -9,6 +9,7 @@ from CrankNicolsonNeumann import crank_nicolson_neu
 import CrankNicolsonDirichlet as cnd
 import matplotlib.pyplot as plt
 import numpy as np
+import os,sys
 import UsefulFunctions as uf
 
 # a = (1/((2*np.pi*np.e)**0.5))
@@ -16,11 +17,11 @@ a = 0.05
 
 """ Set-up """
 # Step sizes
-x_start = -10
-x_stop = 10
+x_start = -14
+x_stop = 14
 #xN = 300
 #tN = 300
-t_stop = 1
+t_stop = 4
 #dt = (t_stop)/(tN-1)
 D = 1
 
@@ -108,15 +109,22 @@ errSumX = np.zeros((len(x),1))
 
 
 plot_label_count_numeric = 0
-plot_label_count_analytic = 0
+# plot_label_count_analytic = 0
 
 fig, ax = plt.subplots()
-
+filename = 'foo0000.jpg'
+plt.savefig(filename,format='jpg')
+c = 0
 for i in np.arange(0,len(t),1):
     err[:,i] = abs(conc[:,i]-uf.cBar(x,t[i])).T
     ax.plot(x,conc[:,i],'b',linewidth=3, label = str(plot_label_count_numeric))
-    ax.plot(x[::20],uf.cBar(x[::20],t[i]),'rx',mew=5,ms=5, label = str(plot_label_count_analytic))
+    # ax.plot(x[::20],uf.cBar(x[::20],t[i]),'rx',mew=5,ms=5, label = str(plot_label_count_analytic))
     ax.set_ylim(0,8)
+    
+    print(c)
+    filename = 'foo' + str(c+1).zfill(4) + '.jpg'
+    plt.savefig(filename, format='jpg')
+    
 ##    plt.ylim((0,cmax))
 #    plt.plot(np.ones(40),np.arange(0,4,0.1),'--')
 #    plt.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')
@@ -126,11 +134,16 @@ for i in np.arange(0,len(t),1):
     plt.pause(0.01)
     line = [line for line in ax.lines if line.get_label() == str(plot_label_count_numeric)][0]
     ax.lines.remove(line)
-    line = [line for line in ax.lines if line.get_label() == str(plot_label_count_analytic)][0]
-    ax.lines.remove(line)
+    # line = [line for line in ax.lines if line.get_label() == str(plot_label_count_analytic)][0]
+    # ax.lines.remove(line)
     plot_label_count_numeric += 1
-    plot_label_count_analytic += 1
+    # plot_label_count_analytic += 1
+    c = c + 1
     
+
+os.system("ffmpeg -y -i foo%04d.jpg implicit.m4v")
+os.system("rm -f *.jpg")
+
 errSumX = np.sum(err[:,1:],axis=1)
 errSumT = np.sum(err[:,1:],axis=0)
 
