@@ -12,16 +12,24 @@ import numpy as np
 import os,sys
 import UsefulFunctions as uf
 
+
+class Spark:
+    def __init__(self,location,fire_size):
+        self.location = location
+        self.fired = False
+        self.time = None
+        self.fire_size = fire_size
+
 # a = (1/((2*np.pi*np.e)**0.5))
-a = 0.05
+a = 0.005
 
 """ Set-up """
 # Step sizes
-x_start = -14
-x_stop = 14
+x_start = -16 # bound for the LHS of the x axis
+x_stop = 16 # bound for the RHS of the x axis
 #xN = 300
 #tN = 300
-t_stop = 4
+t_stop = 10 # How long you want to the simulation to run for
 #dt = (t_stop)/(tN-1)
 D = 1
 
@@ -42,10 +50,15 @@ t = np.arange(0,t_stop,dt)
 
 
 # =============================================================================
+#  setting up lists/counters for later on
 calcium_conc_list = []
-fired = []
-for i in range(x_stop-x_start):
-    fired.append(False)
+spark_list = []
+diff_list = []
+progress = 0
+
+# setting up each spark
+for i in range(x_stop-x_start + 1):
+    spark_list.append(Spark(i,1/a))
 # =============================================================================
 
 
@@ -58,7 +71,7 @@ conc[0,:] = 0
 A = np.zeros((len(x)-2,len(x)-2))
 
 conc[-1,:] = 0
-conc[int(len(x)/2),0] = 1600
+conc[int(len(x)/2)+1,0] = 1000
 #A[0,0] = r*(2/3)+2
 #A[0,1] = -r*(2/3)
 A[0,0] = 1 + (2/3)*r
@@ -78,6 +91,7 @@ for i in np.arange(1,len(x)-3,1):
 b = np.zeros((len(x)-2,1))
   
 for k in np.arange(0,len(t)-1,1):
+    
     total_conc = 0
     
     for i in np.arange(1,len(x)-1):
@@ -92,16 +106,48 @@ for k in np.arange(0,len(t)-1,1):
         total_conc += c[i]
         if i != 0 and i%100 == 0:
             location = int(i/100)
-            if fired[location] is False and c[i] >= 1:
-                print('Firing at location = ' + str(location))
-                c[i] += 200
-                fired[location] = True
-        conc[i+1,k+1] = c[i] 
+            spark = spark_list[location]
+            if spark.fired is False and c[i] >= 1:
+                spark.location = location
+                print('Firing at location = ' + str(spark.location-int((x_stop-x_start)/2)) + '    at time ' + str(k))
+                c[i] += spark.fire_size
+                spark.fired = True
+                spark.time = k
+        conc[i+1,k+1] = c[i]
     
     calcium_conc_list.append(total_conc)
     # print('Total concentration = ' + str(total_conc))
     conc[0,k+1] = (4/3)*conc[1,k+1]-(1/3)*conc[2,k+1]
     conc[-1,k+1] = (4/3)*conc[1,k+1]-(1/3)*conc[2,k+1]
+    
+# =============================================================================
+#     percent = len(np.arange(0,len(t)-1,1))/20
+#     
+#     if k%percent == 0:
+#         if progress == 0:
+#             print('Calculation progress: 20%')
+#             progress += 1
+#         if progress == 1:
+#             print('Calculation progress: 40%')
+#             progress += 1
+#         if progress == 2:
+#             print('Calculation progress: 60%')
+#             progress += 1
+#         if progress == 3:
+#             print('Calculation progress: 80%')
+#             progress += 1
+#         if progress == 4:
+#             print('Calculation progress: 100%')
+# =============================================================================
+
+
+for spark in spark_list:
+    half_point = int((x_stop-x_start)/2)
+    RHS_start = half_point + 2
+    if spark.location >= RHS_start and spark.time is not None:
+        # print('spark location: ' + str(spark.location))
+        difference = spark.time - spark_list[spark.location-1].time
+        diff_list.append(difference)
 
 
 err = np.zeros((len(x),len(t)))
