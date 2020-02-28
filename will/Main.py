@@ -20,9 +20,9 @@ class Spark:
 
 """ Set-up """
 # Step sizes
-x_start = -10 # bound for the LHS of the x axis
-x_stop = 10 # bound for the RHS of the x axis
-t_stop = 2 # How long you want to the simulation to run for
+x_start = -25 # bound for the LHS of the x axis
+x_stop = 25 # bound for the RHS of the x axis
+t_stop = 30 # How long you want to the simulation to run for
 
 D = 1
 a = 0.005
@@ -136,61 +136,33 @@ def plot(conc, x, t):
         ax.plot(x,conc[:,i],'b',linewidth=3, label = str(plot_label_count_numeric))
         ax.set_ylim(0,8)
         
-        print(c)
-        filename = 'foo' + str(c+1).zfill(4) + '.jpg'
-        plt.savefig(filename, format='jpg')
+        if i%20 == 0:
+            print(c)
+            filename = 'foo' + str(c+1).zfill(4) + '.jpg'
+            plt.savefig(filename, format='jpg')
+            c = c + 1
 
         plt.pause(0.01)
         line = [line for line in ax.lines if line.get_label() == str(plot_label_count_numeric)][0]
         ax.lines.remove(line)
         plot_label_count_numeric += 1
-        c = c + 1
     
     os.system("ffmpeg -y -i foo%04d.jpg implicit.m4v")
     os.system("rm -f *.jpg")
     
     return
 
-result = []
+list_of_diff_list = []
 
 for D in [0.5,1,1.5,2,2.5,3]:
-    matrix = pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps)
-    result.append(matrix)
+    each_difference_list = pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps)[0]
+    list_of_diff_list.append(each_difference_list)
 
 #plot(result[1][1],x,t)
 
 time_result_list = []
 
-for i in result:
-    diff_list = i[0]
-    difference = None
-    for k in diff_list:
-        k_1 = None
-        k_2 = None
-        k_3 = None
-        if k_3 is not None:
-            if k_2 is not None:
-                if k_1 is not None:
-                    if k == k_1 or k == k_2 or k == k_3:
-                        difference = k
-                        break
-                    else:
-                        k_3 = k_2
-                        k_2 = k_1
-                        k_1 = k
-                else:
-                    k_3 = k_2
-                    k_2 = k_1
-                    k_1 = k
-            else:
-                k_2 = k_1
-                k_1 = k
-        else:
-            k_1 = k
-    if difference is None:
-        difference = k_3
-    time_result_list.append(difference)
-        
 
-
-    
+for i in list_of_diff_list:
+    v = i[int(len(i)/2)]
+    time_result_list.append(v)
