@@ -21,9 +21,9 @@ class Spark:
 
 """ Set-up """
 # Step sizes
-x_start = -5 # bound for the LHS of the x axis
-x_stop = 5 # bound for the RHS of the x axis
-t_stop = 5 # How long you want to the simulation to run for
+x_start = -10 # bound for the LHS of the x axis
+x_stop = 10 # bound for the RHS of the x axis
+t_stop = 15 # How long you want to the simulation to run for
 
 D = 1
 a = 0.005
@@ -47,6 +47,14 @@ def divide_by(array):
         k = 1/(i/100)
         j.append(k)
     return j
+
+
+def convert_speed(time_array, distance):
+    speed_list = []
+    for i in range(len(time_array)):
+        speed = distance[i]/time_array[i]
+        speed_list.append(speed)
+    return speed_list
         
 
 
@@ -210,4 +218,4 @@ plt.figure(3)
 plt.title('Diffusivity (D) = 1, varying Spark distance (d)')
 plt.xlabel('D/d')
 plt.ylabel('Time')
-plt.plot(divide_by(np.arange(50,400,50)),time_result_list_d, 'r.')
+plt.plot(divide_by(np.arange(50,400,50)),convert_speed(time_result_list_d,np.arange(50,400,50)), 'r.')
