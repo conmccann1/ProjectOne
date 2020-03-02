@@ -14,8 +14,10 @@ def waterfall(matrix, vector):
 
     fig1, ax1 = plt.subplots()
     
-    wf = ax1.contourf(np.flip(np.transpose(matrix)),vector)
+    wf = ax1.contourf(np.flip(np.transpose(matrix)),np.fliplr(vector))
     ax1.set_title('Waterfall')
+    ax1.set_xlabel('Distance')
+    ax1.set_ylabel('Time')
     
     cbar = fig1.colorbar(wf, ax=ax1)
     cbar.ax.set_ylabel('Concentration of Ca2+')

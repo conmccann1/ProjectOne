@@ -8,6 +8,7 @@ Created on Thu Feb 27 16:14:16 2020
 import matplotlib.pyplot as plt
 import numpy as np
 import os #,sys
+from waterfall import waterfall
 
 
 class Spark:
@@ -20,9 +21,9 @@ class Spark:
 
 """ Set-up """
 # Step sizes
-x_start = -25 # bound for the LHS of the x axis
-x_stop = 25 # bound for the RHS of the x axis
-t_stop = 30 # How long you want to the simulation to run for
+x_start = -5 # bound for the LHS of the x axis
+x_stop = 5 # bound for the RHS of the x axis
+t_stop = 5 # How long you want to the simulation to run for
 
 D = 1
 a = 0.005
@@ -38,6 +39,15 @@ x = np.arange(x_start,x_stop,h)
 t = np.arange(0,t_stop,dt)
 
 spark_steps = 100
+
+
+def divide_by(array):
+    j = []
+    for i in array:
+        k = 1/(i/100)
+        j.append(k)
+    return j
+        
 
 
 def pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps):
@@ -102,7 +112,7 @@ def pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps):
                 spark = spark_list[location]
                 if spark.fired is False and c[i] >= 1:
                     spark.location = location
-                    print('Firing at location = ' + str(spark.location-int((x_stop-x_start)/2)) + '    at time ' + str(k))
+                    # print('Firing at location = ' + str(spark.location-int((x_stop-x_start)/2)) + '    at time ' + str(k))
                     c[i] += spark.fire_size
                     spark.fired = True
                     spark.time = k
@@ -152,17 +162,52 @@ def plot(conc, x, t):
     
     return
 
-list_of_diff_list = []
-
-for D in [0.5,1,1.5,2,2.5,3]:
-    each_difference_list = pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps)[0]
-    list_of_diff_list.append(each_difference_list)
-
-#plot(result[1][1],x,t)
-
-time_result_list = []
+list_of_diff_list_D = []
+list_of_diff_list_d = []
 
 
-for i in list_of_diff_list:
-    v = i[int(len(i)/2)]
-    time_result_list.append(v)
+for n in np.arange(0.25,2,0.25):
+    print('D = ' + str(n))
+    each_difference_list_D = pde_implicit(n,x,t,x_start,x_stop,t_stop,spark_steps)
+    list_of_diff_list_D.append(each_difference_list_D)
+    
+for m in np.arange(50,400,50):
+    print('d = ' + str(m))
+    each_difference_list_d = pde_implicit(1,x,t,x_start,x_stop,t_stop,m)
+    list_of_diff_list_d.append(each_difference_list_d)
+
+
+time_result_list_D = []
+time_result_list_d = []
+
+
+for i in list_of_diff_list_D:
+    v = i[0]
+    try:
+        w = v[int(len(v)/2)]
+    except:
+        w = 0
+    time_result_list_D.append(w)
+
+for i in list_of_diff_list_d:
+    v = i[0]
+    try:
+        w = v[int(len(v)/2)]
+    except:
+        w = 0
+    time_result_list_d.append(w)
+
+
+plt.figure(2)
+
+plt.title('Spark distance (d) = 1, varying Diffusivity (D)')
+plt.xlabel('D/d')
+plt.ylabel('Time')
+plt.plot(np.arange(0.25,2,0.25),time_result_list_D, 'bx')
+
+plt.figure(3)
+
+plt.title('Diffusivity (D) = 1, varying Spark distance (d)')
+plt.xlabel('D/d')
+plt.ylabel('Time')
+plt.plot(divide_by(np.arange(50,400,50)),time_result_list_d, 'r.')
