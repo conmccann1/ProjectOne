@@ -1,6 +1,9 @@
 import numpy as np
 import math
 import pylab as pl
+import time
+
+start = time.time()
 
 n = 1000
 alpha = 1/np.sqrt(2*np.pi*np.e)
@@ -42,3 +45,6 @@ for i in t:
         line = [line for line in ax.lines if line.get_label()==str(c)][0]
         ax.lines.remove(line)
     c += 1
+
+
+print('end: ' + str(time.time()-start))
