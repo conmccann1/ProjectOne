@@ -172,7 +172,7 @@ def plot(conc, x, t):
     return
 
 
-result = pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps)
+#result = pde_implicit(D,x,t,x_start,x_stop,t_stop,spark_steps)
 
 velocity_list_D = []
 for D in np.arange(20,90,10):
@@ -181,7 +181,9 @@ for D in np.arange(20,90,10):
     time_diff = td*((d**2)/D)/100
     print('time_diff: ' + str(time_diff))
     v = 2/time_diff
+    print('D = ' + str(D))
     print('v: ' + str(v))
+    print('Gradient at D = ' + str(D) + ' is: ' + str(v/(D/d)))
     velocity_list_D.append(v)
     
 #velocity_list_d = []
@@ -202,8 +204,10 @@ plt.figure(2)
 #plt.title()
 plt.xlabel('D/d (micrometers/second)')
 plt.ylabel('Velocity (micrometers/second)')
-plt.ylim(150)
+plt.ylim(0,200)
+plt.xlim(0,40)
 plt.plot(np.arange(20,90,10)/2,velocity_list_D, 'ks-', markerfacecolor='w')
+plt.plot(np.unique(np.arange(20,90,10)/2), np.poly1d(np.polyfit(np.arange(20,90,10)/2, velocity_list_D, 1))(np.unique(np.arange(20,90,10)/2)),'k-')
 #plt.plot(30/np.flip(np.arange(0.1,3,0.1)), np.flip(velocity_list_d), 'r.')
 
 fig1, ax1 = plt.subplots()
@@ -212,7 +216,7 @@ levels = np.arange(result[1].min(),0.01*result[1].max(),0.1)
 norm = cm.colors.Normalize(vmax=0.01*result[1].max(),vmin=result[1].min())
 
 wf = ax1.contourf(x*2,t*((2**2)/30),np.transpose(result[1]*0.14),levels=levels,norm=norm,extend='max')
-ax1.set_title('Waterfall')
+#ax1.set_title('Waterfall')
 ax1.set_xlabel('Distance (micrometers)')
 ax1.set_ylabel('Time (seconds)')
 ax1.set_ylim(max(t*((2**2)/30)),min(t*((2**2)/30)))

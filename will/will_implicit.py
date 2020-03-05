@@ -25,18 +25,18 @@ class Spark:
 
 """ Set-up """
 # Step sizes
-x_start = -20 # bound for the LHS of the x axis
-x_stop = 20 # bound for the RHS of the x axis
+x_start = -5 # bound for the LHS of the x axis
+x_stop = 5 # bound for the RHS of the x axis
 #xN = 300
 #tN = 300
-t_stop = 10 # How long you want to the simulation to run for
+t_stop = 1.8 # How long you want to the simulation to run for
 #dt = (t_stop)/(tN-1)
 D = 1
 a = 0.005
 
 
-h = 0.01
-dt = 0.01
+h = 0.001
+dt = 0.001
 
 xN = ((x_stop-x_start)/h) + 1
 tN = ((t_stop)/dt) + 1
@@ -71,7 +71,7 @@ conc[0,:] = 0
 A = np.zeros((len(x)-2,len(x)-2))
 
 conc[-1,:] = 0
-conc[int(len(x)/2)+1,0] = 600
+conc[int(len(x)/2)+1,0] = 6000
 #A[0,0] = r*(2/3)+2
 #A[0,1] = -r*(2/3)
 A[0,0] = 1 + (2/3)*r
@@ -104,8 +104,8 @@ for k in np.arange(0,len(t)-1,1):
     
     for i in np.arange(0,len(x)-2):
         total_conc += c[i]
-        if i >= 100 and i%100 == 0:
-            location = int(i/100)
+        if i >= 1000 and i%1000 == 0:
+            location = int(i/1000)
             spark = spark_list[location]
             if spark.fired is False and c[i] >= 1:
                 spark.location = location
@@ -158,8 +158,19 @@ plot_label_count_numeric = 0
 # plot_label_count_analytic = 0
 
 fig, ax = plt.subplots()
-filename = 'foo0000.jpg'
-plt.savefig(filename,format='jpg')
+
+plt.plot(np.ones(100),np.arange(0,10,0.1),'k--', linewidth = 0.5)
+plt.plot(-1*np.ones(100),np.arange(0,10,0.1),'k--', linewidth = 0.5)
+plt.plot(x,np.ones(len(x)),'k--', linewidth = 0.5)
+plt.xlim(-5,5)
+plt.ylim(0,8)
+plt.xlabel(r'$\bar{x}$', fontsize = 20)
+h = plt.ylabel(r'$\bar{c}$', fontsize = 20)
+h.set_rotation(0)
+
+
+#filename = 'foo0000.jpg'
+#plt.savefig(filename,format='jpg')
 c = 0
 for i in np.arange(0,len(t),1):
     err[:,i] = abs(conc[:,i]-uf.cBar(x,t[i])).T
@@ -167,30 +178,32 @@ for i in np.arange(0,len(t),1):
     # ax.plot(x[::20],uf.cBar(x[::20],t[i]),'rx',mew=5,ms=5, label = str(plot_label_count_analytic))
     ax.set_ylim(0,8)
     
-    print(c)
-    filename = 'foo' + str(c+1).zfill(4) + '.jpg'
-    plt.savefig(filename, format='jpg')
+    if i == spark_list[2].time-3:
+        plt.savefig('beforespark.jpg', format='jpg')
+        print('time before = ' +str(i))
+    if i == spark_list[2].time+3:
+        plt.savefig('afterspark.jpg', format='jpg')
+        print('time after = ' +str(i))
+#    print(c)
+#    filename = 'foo' + str(c+1).zfill(4) + '.jpg'
+#    plt.savefig(filename, format='jpg')
     
 ##    plt.ylim((0,cmax))
-#    plt.plot(np.ones(40),np.arange(0,4,0.1),'--')
-#    plt.plot(-1*np.ones(40),np.arange(0,4,0.1),'--')
-#    plt.plot(x,np.ones(len(x)),'--')
-#    plt.plot(-x,np.ones(len(x)),'--')
 #    plt.xlim((x_start,3))
-    plt.pause(0.01)
+    plt.pause(0.001)
     line = [line for line in ax.lines if line.get_label() == str(plot_label_count_numeric)][0]
     ax.lines.remove(line)
     # line = [line for line in ax.lines if line.get_label() == str(plot_label_count_analytic)][0]
     # ax.lines.remove(line)
     plot_label_count_numeric += 1
     # plot_label_count_analytic += 1
-    c = c + 1
+#    c = c + 1
 
 
-os.system("ffmpeg -y -i foo%04d.jpg implicit.m4v")
-os.system("rm -f *.jpg")
+#os.system("ffmpeg -y -i foo%04d.jpg implicit.m4v")
+#os.system("rm -f *.jpg")
 
-waterfall(conc,t)
+#waterfall(conc,t)
 
 # =============================================================================
 # errSumX = np.sum(err[:,1:],axis=1)

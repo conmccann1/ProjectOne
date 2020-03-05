@@ -22,6 +22,8 @@ fig, ax = pl.subplots()
 ax.plot(x,np.ones(100),linestyle='dashed', color = 'red', linewidth = 0.5)
 ax.plot(np.ones(100),c,linestyle='dotted', color = 'green', linewidth = 0.5)
 ax.plot(np.negative(np.ones(100)),c,linestyle='dotted', color = 'green', linewidth = 0.5)
+ax.set_ylabel(r'$\bar{c}$', fontsize = 20)
+ax.set_xlabel(r'$\bar{x}$', fontsize = 20)
 
 c = 0
 
